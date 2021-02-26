@@ -1,0 +1,16 @@
+package com.lawencon.shipment.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.lawencon.shipment.model.BranchRegions;
+
+/**
+ * @author Dzaky Fadhilla Guci
+ */
+
+@Repository
+public interface BranchRegionsRepo extends JpaRepository<BranchRegions, Long> {
+
+	BranchRegions findByBranchCode(String branchCode) throws Exception;
+}
