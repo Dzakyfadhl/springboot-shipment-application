@@ -1,14 +1,11 @@
 package com.lawencon.shipment.service.hibernate;
 
 import java.util.List;
-
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.lawencon.shipment.dao.UsersDao;
 import com.lawencon.shipment.model.EmployeeProfiles;
 import com.lawencon.shipment.model.UserSession;
@@ -53,7 +50,7 @@ public class UserServiceImpl implements UserService {
 		Long count = usersDao.countData();
 		user.setUserCode("USER0" + count);
 
-		user.setPasswords(passwordEncoder.encode(user.getPasswords()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 		usersDao.insertUser(user);
 
 	}
@@ -63,10 +60,10 @@ public class UserServiceImpl implements UserService {
 
 		Users userAll = usersDao.loginUserByUsernamePassword(user);
 		EmployeeProfiles activeProfile = new EmployeeProfiles();
-		activeProfile.setUsersId(userAll);
+        activeProfile.setUsers(userAll);
 		activeProfile = profileService.getProfileByUserId(activeProfile);
 		userSession.setActiveProfile(activeProfile);
-		userAll.setPasswords("hidden");
+        userAll.setPassword("hidden");
 		return userAll;
 
 	}
@@ -77,7 +74,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Long getIdByUserCode(String userCode) throws Exception {
+    public String getIdByUserCode(String userCode) throws Exception {
 		return usersDao.getIdByUserCode(userCode);
 	}
 

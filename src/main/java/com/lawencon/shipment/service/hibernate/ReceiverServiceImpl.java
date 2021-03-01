@@ -3,13 +3,10 @@ package com.lawencon.shipment.service.hibernate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import com.lawencon.shipment.dao.ReceiverDao;
 import com.lawencon.shipment.model.Receivers;
 import com.lawencon.shipment.model.Senders;
@@ -34,12 +31,12 @@ public class ReceiverServiceImpl implements ReceiverService {
 	public Receivers insertReceiver(Receivers receiver) throws Exception {
 		validateInput(receiver);
 
-		Senders senders = sendersService.getSenderByCode(receiver.getSenderId());
+        Senders senders = sendersService.getSenderByCode(receiver.getSenders());
 		if (senders == null) {
 			throw new IllegalArgumentException("Invalid foreign key senders on receiver! ");
 		}
-		receiver.setSenderId(senders);
-		receiver.setReceiveStatus("Received");
+        receiver.setSenders(senders);
+        receiver.setStatus("Received");
 		StringBuilder code = new StringBuilder("RCV");
 
 		Long count = receiverDao.countData();
@@ -48,7 +45,7 @@ public class ReceiverServiceImpl implements ReceiverService {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HHmmss");
 		String formattedDateTime = currentDateTime.format(formatter);
 		code.append(formattedDateTime).append("0").append(count.toString());
-		receiver.setReceiverCode(code.toString());
+        receiver.setCode(code.toString());
 		return receiverDao.insertReceiver(receiver);
 	}
 
@@ -59,19 +56,19 @@ public class ReceiverServiceImpl implements ReceiverService {
 		if (receiver.getId() != null) {
 			vldMsg.append(", id receiver must not inputed ");
 		}
-		if (receiver.getReceiverCode() != null) {
+        if (receiver.getCode() != null) {
 			vldMsg.append(", receiver code auto generated ");
 		}
-		if (receiver.getReceiverAddress() == null) {
+        if (receiver.getAddress() == null) {
 			vldMsg.append(", receiver address ");
 		}
-		if (receiver.getReceiverPhone() == null || receiver.getReceiverPhone().length() > 15) {
+        if (receiver.getPhone() == null || receiver.getPhone().length() > 15) {
 			vldMsg.append(", receiver phone ");
 		}
-		if (receiver.getReceiverName() == null) {
+        if (receiver.getName() == null) {
 			vldMsg.append(", receiver name ");
 		}
-		if (receiver.getSenderId() == null) {
+        if (receiver.getSenders() == null) {
 			vldMsg.append(", sender id ");
 		}
 
@@ -82,7 +79,7 @@ public class ReceiverServiceImpl implements ReceiverService {
 
 	@Override
 	@Transactional
-	public List<Receivers> getReceiverByCourier(Long id) throws Exception {
+    public List<Receivers> getReceiverByCourier(String id) throws Exception {
 		return receiverDao.getReceiverByCourier(id);
 	}
 

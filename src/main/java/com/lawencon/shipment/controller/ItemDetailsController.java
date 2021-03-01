@@ -1,7 +1,6 @@
 package com.lawencon.shipment.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.shipment.helper.Response;
 import com.lawencon.shipment.model.ItemDetails;
@@ -29,7 +27,7 @@ public class ItemDetailsController {
 	private ItemsService itemsService;
 
 	@GetMapping("/rcvid/{id}")
-	public Response<?> findByReceiversId(@PathVariable("id") Long id) {
+    public Response<?> findByReceiversId(@PathVariable("id") String id) {
 		try {
 			Receivers rcv = new Receivers();
 			rcv.setId(id);

@@ -2,7 +2,6 @@ package com.lawencon.shipment.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import com.lawencon.shipment.model.Roles;
 
 /**
@@ -10,6 +9,6 @@ import com.lawencon.shipment.model.Roles;
  */
 
 @Repository
-public interface RolesRepo extends JpaRepository<Roles, Long> {
+public interface RolesRepo extends JpaRepository<Roles, String> {
 
 }

@@ -1,7 +1,6 @@
 package com.lawencon.shipment.dao;
 
 import java.util.List;
-
 import com.lawencon.shipment.model.BranchRegions;
 
 /**
@@ -18,6 +17,6 @@ public interface BranchDao {
 
 	BranchRegions updateData(BranchRegions branch) throws Exception;
 
-	void deleteData(BranchRegions branch) throws Exception;
+    void deleteData(String id) throws Exception;
 
 }

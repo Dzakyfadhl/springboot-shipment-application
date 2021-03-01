@@ -4,24 +4,20 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.shipment.model.Users;
 import com.lawencon.shipment.service.UserService;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -52,7 +48,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		}
 
 		return authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPasswords()));
+            .authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
 	}
 
@@ -80,7 +77,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		response.setContentType("application/json");
 		response.getWriter().append("{\"token\" : \"" + token + "\",").append("\"profile\" : {")
 				.append("\"userId\" : \"" + user.getId() + "\",")
-				.append("\"roleCode\" : \"" + user.getRolesId().getRoleCode() + "\"}").append("}");
+            .append("\"roleCode\" : \"" + user.getRoles().getCode() + "\"}").append("}");
 
 	}
 

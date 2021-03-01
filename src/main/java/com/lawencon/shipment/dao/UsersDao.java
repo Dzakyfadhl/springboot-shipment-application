@@ -1,7 +1,6 @@
 package com.lawencon.shipment.dao;
 
 import java.util.List;
-
 import com.lawencon.shipment.model.Users;
 
 /**
@@ -10,7 +9,7 @@ import com.lawencon.shipment.model.Users;
 
 public interface UsersDao {
 
-	Long getIdByUserCode(String userCode) throws Exception;
+  String getIdByUserCode(String userCode) throws Exception;
 
 	List<Users> getListUsers() throws Exception;
 

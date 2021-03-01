@@ -2,86 +2,37 @@ package com.lawencon.shipment.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
-
+import javax.persistence.UniqueConstraint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Dzaky Fadhilla Guci
  */
 
 @Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(Include.NON_NULL)
-@Table(name = "tb_m_branch_regions")
-public class BranchRegions {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+@Table(name = "tb_m_branch_regions",
+    uniqueConstraints = {@UniqueConstraint(name = "bk_branchs", columnNames = {"branch_code"})})
+public class BranchRegions extends BaseMaster {
 
-	@Column(name = "branch_code", unique = true, nullable = false, length = 100)
-	private String branchCode;
+  private static final long serialVersionUID = 1L;
 
-	@Column(nullable = false, length = 100)
-	private String region;
+  @Column(name = "branch_code", nullable = false, length = 100)
+  private String branchCode;
 
-	@Column(unique = true, nullable = false, length = 15)
-	private String phone;
+  @Column(nullable = false, length = 100)
+  private String region;
 
-	@Column(name = "street_name", nullable = false)
-	private String streetName;
+  @Column(nullable = false, length = 15)
+  private String phone;
 
-	public BranchRegions() {
-
-	}
-
-	public BranchRegions(String region, String phone, String streetName) {
-		this.region = region;
-		this.phone = phone;
-		this.streetName = streetName;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getBranchCode() {
-		return branchCode;
-	}
-
-	public void setBranchCode(String branchCode) {
-		this.branchCode = branchCode;
-	}
-
-	public String getRegion() {
-		return region;
-	}
-
-	public void setRegion(String region) {
-		this.region = region;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getStreetName() {
-		return streetName;
-	}
-
-	public void setStreetName(String streetName) {
-		this.streetName = streetName;
-	}
+  @Column(nullable = false)
+  private String address;
 
 }

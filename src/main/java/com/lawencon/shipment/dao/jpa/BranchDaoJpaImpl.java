@@ -1,10 +1,8 @@
 package com.lawencon.shipment.dao.jpa;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.lawencon.shipment.dao.BaseDao;
 import com.lawencon.shipment.dao.BranchDao;
 import com.lawencon.shipment.model.BranchRegions;
@@ -42,8 +40,8 @@ public class BranchDaoJpaImpl extends BaseDao implements BranchDao {
 	}
 
 	@Override
-	public void deleteData(BranchRegions branch) throws Exception {
-		branchRegionsRepo.deleteById(branch.getId());
+    public void deleteData(String id) throws Exception {
+      branchRegionsRepo.deleteById(id);
 	}
 
 }

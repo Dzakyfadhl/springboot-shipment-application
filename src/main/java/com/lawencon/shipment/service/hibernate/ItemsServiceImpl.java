@@ -1,11 +1,9 @@
 package com.lawencon.shipment.service.hibernate;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import com.lawencon.shipment.dao.ItemsDao;
 import com.lawencon.shipment.model.Categories;
 import com.lawencon.shipment.model.ItemDetails;
@@ -30,11 +28,12 @@ public class ItemsServiceImpl implements ItemsService {
 	@Override
 	public void insertItems(ItemDetails itemDetails) throws Exception {
 		validateInput(itemDetails);
-		Categories category = categoryService.getCategoryByCode(itemDetails.getCategoriesId().getCategoriesCode());
+        Categories category =
+            categoryService.getCategoryByCode(itemDetails.getCategories().getCategoriesCode());
 		if (category == null) {
 			throw new IllegalArgumentException("Category on item not found!");
 		}
-		itemDetails.setCategoriesId(category);
+        itemDetails.setCategories(category);
 		itemsDao.insertItems(itemDetails);
 	}
 
@@ -48,13 +47,13 @@ public class ItemsServiceImpl implements ItemsService {
 		if (item.getItemName() == null || item.getItemName().trim().equals("")) {
 			vldMsg.append(", item name ");
 		}
-		if (item.getItemDesc() == null || item.getItemDesc().trim().equals("")) {
+        if (item.getDescription() == null || item.getDescription().trim().equals("")) {
 			vldMsg.append(", item description ");
 		}
 		if (item.getWeight() == null) {
 			vldMsg.append(", item weight ");
 		}
-		if (item.getCategoriesId() == null) {
+        if (item.getCategories() == null) {
 			vldMsg.append(", item categories code ");
 		}
 

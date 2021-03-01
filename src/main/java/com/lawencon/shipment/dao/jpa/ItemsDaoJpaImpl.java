@@ -1,10 +1,8 @@
 package com.lawencon.shipment.dao.jpa;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.lawencon.shipment.dao.BaseDao;
 import com.lawencon.shipment.dao.ItemsDao;
 import com.lawencon.shipment.model.ItemDetails;
@@ -30,12 +28,12 @@ public class ItemsDaoJpaImpl extends BaseDao implements ItemsDao {
 		ItemDetails listItemDetailsDb = itemDetailsRepo.findById(listItemDetails.getId()).get();
 
 		// Can't update receiver id
-		listItemDetails.setReceiversId(listItemDetailsDb.getReceiversId());
+        listItemDetails.setReceivers(listItemDetailsDb.getReceivers());
 		return itemDetailsRepo.save(listItemDetails);
 	}
 
 	@Override
 	public List<ItemDetails> findByReceiversId(Receivers rcv) throws Exception {
-		return itemDetailsRepo.findByReceiversId(rcv);
+      return itemDetailsRepo.findByReceivers(rcv);
 	}
 }

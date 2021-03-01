@@ -1,10 +1,8 @@
 package com.lawencon.shipment.dao.jpa;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.lawencon.shipment.dao.BaseDao;
 import com.lawencon.shipment.dao.CategoriesDao;
 import com.lawencon.shipment.model.Categories;
@@ -42,7 +40,7 @@ public class CategoriesDaoJpaImpl extends BaseDao implements CategoriesDao {
 	}
 
 	@Override
-	public void deleteData(Categories category) throws Exception {
-		categoriesRepo.deleteById(category.getId());
+    public void deleteData(String id) throws Exception {
+      categoriesRepo.deleteById(id);
 	}
 }

@@ -1,11 +1,9 @@
 package com.lawencon.shipment.repo;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import com.lawencon.shipment.model.Receivers;
 import com.lawencon.shipment.model.Shipments;
 
@@ -14,14 +12,16 @@ import com.lawencon.shipment.model.Shipments;
  */
 
 @Repository
-public interface ReceiversRepo extends JpaRepository<Receivers, Long> {
+public interface ReceiversRepo extends JpaRepository<Receivers, String> {
 
-	@Query(value = "select r.id, r.receiverCode, r.receiverName , r.receiverPhone ,r.receiverAddress, r.arrivalTime , r.receiveStatus, s.shippingCode from Receivers as r inner join r.shipmentId as s inner join s.courierId as c where c.id = ?1")
-	List<Object[]> getReceiverByCourierId(Long id) throws Exception;
+  @Query(
+      value = "select r.id, r.code, r.name , r.phone ,r.address, r.trxTime , r.status, s.trxNumber from Receivers as r inner join r.shipments as s inner join s.courier as c where c.id = ?1")
+    List<Object[]> getReceiverByCourier(String id) throws Exception;
 
-	List<Receivers> findByShipmentId(Shipments shipment) throws Exception;
+    List<Receivers> findByShipments(Shipments shipment) throws Exception;
 
-	@Query(value = "SELECT r FROM Receivers r INNER JOIN r.shipmentId s INNER JOIN s.courierId c WHERE c.employeeCode = ?1")
+    @Query(
+        value = "SELECT r FROM Receivers r INNER JOIN r.shipments s INNER JOIN s.courier c WHERE c.employeeCode = ?1")
 	List<Receivers> getByCourier(String empCode) throws Exception;
 
 	long count();

@@ -30,151 +30,152 @@ import com.lawencon.shipment.service.ShipmentService;
 @Transactional
 public class ShipmentServiceImpl implements ShipmentService {
 
-	private ShipmentsDao shipmentDao;
+  private ShipmentsDao shipmentDao;
 
-	private UserSession userSession;
+  private UserSession userSession;
 
-	private ItemsService itemService;
-	private ReceiverService receiverService;
-	private BranchService branchService;
-	private ServeShipService serveShipService;
-	private ProfileService profileService;
+  private ItemsService itemService;
+  private ReceiverService receiverService;
+  private BranchService branchService;
+  private ServeShipService serveShipService;
+  private ProfileService profileService;
 
-	@Autowired
-	public ShipmentServiceImpl(@Qualifier(value = "jpa_shipments") ShipmentsDao shipmentDao, ItemsService itemService,
-			UserSession userSession, ReceiverService receiverService, BranchService branchService,
-			ServeShipService serveShipService, ProfileService profileService) {
-		this.shipmentDao = shipmentDao;
-		this.itemService = itemService;
-		this.userSession = userSession;
-		this.receiverService = receiverService;
-		this.branchService = branchService;
-		this.serveShipService = serveShipService;
-		this.profileService = profileService;
-	}
+  @Autowired
+  public ShipmentServiceImpl(@Qualifier(value = "jpa_shipments") ShipmentsDao shipmentDao,
+      ItemsService itemService, UserSession userSession, ReceiverService receiverService,
+      BranchService branchService, ServeShipService serveShipService,
+      ProfileService profileService) {
+    this.shipmentDao = shipmentDao;
+    this.itemService = itemService;
+    this.userSession = userSession;
+    this.receiverService = receiverService;
+    this.branchService = branchService;
+    this.serveShipService = serveShipService;
+    this.profileService = profileService;
+  }
 
-	@Override
-	public Shipments insertShipment(Shipments ship, List<Receivers> listReceivers) throws Exception {
+  @Override
+  public Shipments insertShipment(Shipments ship, List<Receivers> listReceivers) throws Exception {
 
-		validateInput(ship);
+    validateInput(ship);
 
-		BranchRegions br = branchService.getBranchByCode(ship.getBranchId().getBranchCode());
-		ServiceShipments ss = serveShipService.getServiceByCode(ship.getServiceId().getServiceCode());
-		EmployeeProfiles courier = profileService.getProfileByCode(ship.getCourierId().getEmployeeCode());
-		EmployeeProfiles cashier = profileService.getProfileByCode(ship.getCashierId().getEmployeeCode());
+    BranchRegions br = branchService.getBranchByCode(ship.getBranch().getBranchCode());
+    ServiceShipments ss = serveShipService.getServiceByCode(ship.getService().getServiceCode());
+    EmployeeProfiles courier = profileService.getProfileByCode(ship.getCourier().getEmployeeCode());
+    EmployeeProfiles cashier = profileService.getProfileByCode(ship.getCashier().getEmployeeCode());
 
-		validateFK(br, ss, courier, cashier);
+    validateFK(br, ss, courier, cashier);
 
-		ship.setBranchId(br);
-		ship.setServiceId(ss);
-		ship.setCashierId(cashier);
-		ship.setCourierId(courier);
+    ship.setBranch(br);
+    ship.setService(ss);
+    ship.setCashier(cashier);
+    ship.setCourier(courier);
 
-		StringBuilder code = new StringBuilder("SHIP");
+    StringBuilder code = new StringBuilder("SHIP");
 
-		LocalDateTime currentDateTime = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy-HHmmss");
-		String formattedDateTime = currentDateTime.format(formatter);
-		ship.setTrancastionTime(currentDateTime);
-		code.append(formattedDateTime);
-		ship.setShippingCode(code.toString());
-//		ship.setCashierId(userSession.getActiveProfile());
+    LocalDateTime currentDateTime = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy-HHmmss");
+    String formattedDateTime = currentDateTime.format(formatter);
+    ship.setTrxTime(currentDateTime);
+    code.append(formattedDateTime);
+    ship.setTrxNumber(code.toString());
+    // ship.setCashierId(userSession.getActiveProfile());
 
-		double tempPrice = 0;
+    double tempPrice = 0;
 
-		Shipments shipId = shipmentDao.insertShipment(ship);
-		for (Receivers r : listReceivers) {
-			r.setShipmentId(shipId);
-			Receivers receiverId = receiverService.insertReceiver(r);
-			for (ItemDetails i : r.getListItemsReceiver()) {
-				i.setReceiversId(receiverId);
-				itemService.insertItems(i);
-				tempPrice += (i.getWeight() * 5000);
-			}
+    Shipments shipId = shipmentDao.insertShipment(ship);
+    for (Receivers r : listReceivers) {
+      r.setShipments(shipId);
+      Receivers receiverId = receiverService.insertReceiver(r);
+      for (ItemDetails i : r.getListItemsReceiver()) {
+        i.setReceivers(receiverId);
+        itemService.insertItems(i);
+        tempPrice += (i.getWeight() * 5000);
+      }
 
-		}
+    }
 
-		shipId.setTotalPrice(new BigDecimal(tempPrice));
+    shipId.setTotalPrice(new BigDecimal(tempPrice));
 
-		return shipmentDao.updateTotalPrice(shipId);
+    return shipmentDao.updateTotalPrice(shipId);
 
-	}
+  }
 
-	private void validateInput(Shipments ship) throws Exception {
-		StringBuilder vldMsg = new StringBuilder("Invalid input ");
-		int msgLength = vldMsg.length();
+  private void validateInput(Shipments ship) throws Exception {
+    StringBuilder vldMsg = new StringBuilder("Invalid input ");
+    int msgLength = vldMsg.length();
 
-		if (ship.getId() != null) {
-			vldMsg.append(", id ");
-		}
-		if (ship.getShippingCode() != null) {
-			vldMsg.append(", code auto generated ");
-		}
-		if (ship.getBranchId() == null) {
-			vldMsg.append(", branch ");
-		}
-		if (ship.getCashierId() == null) {
-			vldMsg.append(", cashier ");
-		}
-		if (ship.getCourierId() == null) {
-			vldMsg.append(", courier ");
-		}
-		if (ship.getServiceId() == null) {
-			vldMsg.append(", service ");
-		}
+    if (ship.getId() != null) {
+      vldMsg.append(", id ");
+    }
+    if (ship.getTrxNumber() != null) {
+      vldMsg.append(", code auto generated ");
+    }
+    if (ship.getBranch() == null) {
+      vldMsg.append(", branch ");
+    }
+    if (ship.getCashier() == null) {
+      vldMsg.append(", cashier ");
+    }
+    if (ship.getCourier() == null) {
+      vldMsg.append(", courier ");
+    }
+    if (ship.getService() == null) {
+      vldMsg.append(", service ");
+    }
 
-		if (vldMsg.length() > msgLength) {
-			throw new Exception(vldMsg.toString());
-		}
-	}
+    if (vldMsg.length() > msgLength) {
+      throw new Exception(vldMsg.toString());
+    }
+  }
 
-	private void validateFK(BranchRegions br, ServiceShipments ss, EmployeeProfiles courier, EmployeeProfiles cashier)
-			throws Exception {
-		StringBuilder vldMsg = new StringBuilder("Foreign key not found ");
-		int msgLength = vldMsg.length();
+  private void validateFK(BranchRegions br, ServiceShipments ss, EmployeeProfiles courier,
+      EmployeeProfiles cashier) throws Exception {
+    StringBuilder vldMsg = new StringBuilder("Foreign key not found ");
+    int msgLength = vldMsg.length();
 
-		if (br == null) {
-			vldMsg.append(", branch ");
-		}
-		if (ss == null) {
-			vldMsg.append(", service ");
-		}
+    if (br == null) {
+      vldMsg.append(", branch ");
+    }
+    if (ss == null) {
+      vldMsg.append(", service ");
+    }
 
-		if (courier == null) {
-			vldMsg.append(", courier ");
-		}
-		if (cashier == null) {
-			vldMsg.append(", cashier ");
-		}
+    if (courier == null) {
+      vldMsg.append(", courier ");
+    }
+    if (cashier == null) {
+      vldMsg.append(", cashier ");
+    }
 
-		if (vldMsg.length() > msgLength) {
-			throw new Exception(vldMsg.toString());
-		}
-	}
+    if (vldMsg.length() > msgLength) {
+      throw new Exception(vldMsg.toString());
+    }
+  }
 
-	@Override
-	public List<Shipments> getAll() throws Exception {
-		return shipmentDao.getAll();
-	}
+  @Override
+  public List<Shipments> getAll() throws Exception {
+    return shipmentDao.getAll();
+  }
 
-	@Override
-	public List<Shipments> getByCashierId(Long id) throws Exception {
-		List<Shipments> listShipments = shipmentDao.getByCashierId(id);
-		if (listShipments.isEmpty()) {
-			return null;
-		} else {
-			return shipmentDao.getByCashierId(id);
-		}
+  @Override
+  public List<Shipments> getByCashierId(String id) throws Exception {
+    List<Shipments> listShipments = shipmentDao.getByCashierId(id);
+    if (listShipments.isEmpty()) {
+      return null;
+    } else {
+      return shipmentDao.getByCashierId(id);
+    }
 
-	}
+  }
 
-	@Override
-	public Shipments findByShippingCode(String code) throws Exception {
-		return shipmentDao.findByShippingCode(code);
-	}
+  @Override
+  public Shipments findByShippingCode(String code) throws Exception {
+    return shipmentDao.findByShippingCode(code);
+  }
 
-	@Override
-	public List<Shipments> findByCourierId(EmployeeProfiles courier) throws Exception {
-		return shipmentDao.findByCourierId(courier);
-	}
+  @Override
+  public List<Shipments> findByCourierId(EmployeeProfiles courier) throws Exception {
+    return shipmentDao.findByCourierId(courier);
+  }
 }

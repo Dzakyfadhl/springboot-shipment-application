@@ -1,7 +1,6 @@
 package com.lawencon.shipment.service;
 
 import java.util.List;
-
 import com.lawencon.shipment.model.Users;
 
 /**
@@ -20,6 +19,6 @@ public interface UserService {
 
 	Users findByUsername(String username) throws Exception;
 
-	Long getIdByUserCode(String userCode) throws Exception;
+    String getIdByUserCode(String userCode) throws Exception;
 
 }

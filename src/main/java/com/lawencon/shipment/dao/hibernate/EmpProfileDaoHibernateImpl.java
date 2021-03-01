@@ -1,9 +1,7 @@
 package com.lawencon.shipment.dao.hibernate;
 
 import java.util.List;
-
 import org.springframework.stereotype.Repository;
-
 import com.lawencon.shipment.dao.BaseDao;
 import com.lawencon.shipment.dao.EmpProfileDao;
 import com.lawencon.shipment.model.EmployeeProfiles;
@@ -45,7 +43,7 @@ public class EmpProfileDaoHibernateImpl extends BaseDao implements EmpProfileDao
 
 		List<EmployeeProfiles> listResult = em
 				.createQuery("from EmployeeProfiles where users_id = ?1 ", EmployeeProfiles.class)
-				.setParameter(1, employeeProfiles.getUsersId().getId()).getResultList();
+            .setParameter(1, employeeProfiles.getUsers().getId()).getResultList();
 
 		return getResultModel(listResult);
 

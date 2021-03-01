@@ -1,9 +1,7 @@
 package com.lawencon.shipment.dao.hibernate;
 
 import java.util.List;
-
 import org.springframework.stereotype.Repository;
-
 import com.lawencon.shipment.dao.BaseDao;
 import com.lawencon.shipment.dao.CategoriesDao;
 import com.lawencon.shipment.model.Categories;
@@ -45,7 +43,7 @@ public class CategoriesDaoHibernateImpl extends BaseDao implements CategoriesDao
 	}
 
 	@Override
-	public void deleteData(Categories category) throws Exception {
+    public void deleteData(String id) throws Exception {
 		// TODO Auto-generated method stub
 
 	}

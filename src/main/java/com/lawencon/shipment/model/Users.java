@@ -2,77 +2,41 @@ package com.lawencon.shipment.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
+import javax.persistence.UniqueConstraint;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Dzaky Fadhilla Guci
  */
 @Entity
-@Table(name = "tb_m_users")
-@JsonIgnoreProperties(allowSetters = true, value = { "hibernateLazyInitializer", "passwords" })
-public class Users {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "tb_m_users",
+    uniqueConstraints = {@UniqueConstraint(name = "bk_code", columnNames = "user_code"),
+        @UniqueConstraint(name = "bk_username", columnNames = "username")})
+@JsonIgnoreProperties(allowSetters = true, value = {"hibernateLazyInitializer", "passwords"})
+public class Users extends BaseMaster {
 
-	@Column(name = "user_code", unique = true, nullable = false, length = 100)
-	private String userCode;
+  private static final long serialVersionUID = 1L;
 
-	@Column(unique = true, nullable = false, length = 20)
-	private String username;
+  @Column(name = "user_code", unique = true, nullable = false, length = 100)
+  private String userCode;
 
-	@Column(nullable = false, length = 100)
-	private String passwords;
+  @Column(nullable = false, length = 50)
+  private String username;
 
-	@ManyToOne // (fetch = FetchType.LAZY)
-	@JoinColumn(name = "roles_id", nullable = false)
-	private Roles rolesId;
+  @Column(name = "user_password", nullable = false, length = 100)
+  private String password;
 
-	public Long getId() {
-		return id;
-	}
+  @ManyToOne // (fetch = FetchType.LAZY)
+  @JoinColumn(name = "role_id", nullable = false, foreignKey = @ForeignKey(name = "fk_role"))
+  private Roles roles;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPasswords() {
-		return passwords;
-	}
-
-	public void setPasswords(String passwords) {
-		this.passwords = passwords;
-	}
-
-	public Roles getRolesId() {
-		return rolesId;
-	}
-
-	public void setRolesId(Roles rolesId) {
-		this.rolesId = rolesId;
-	}
-
-	public String getUserCode() {
-		return userCode;
-	}
-
-	public void setUserCode(String userCode) {
-		this.userCode = userCode;
-	}
 
 }

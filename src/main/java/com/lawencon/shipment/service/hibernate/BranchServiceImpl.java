@@ -1,13 +1,10 @@
 package com.lawencon.shipment.service.hibernate;
 
 import java.util.List;
-
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import com.lawencon.shipment.dao.BranchDao;
 import com.lawencon.shipment.model.BranchRegions;
 import com.lawencon.shipment.service.BranchService;
@@ -51,7 +48,7 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	@Override
-	public void deleteData(BranchRegions branch) throws Exception {
-		branchDao.deleteData(branch);
+    public void deleteData(String id) throws Exception {
+      branchDao.deleteData(id);
 	}
 }

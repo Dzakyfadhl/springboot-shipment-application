@@ -1,7 +1,6 @@
 package com.lawencon.shipment.dao;
 
 import java.util.List;
-
 import com.lawencon.shipment.model.Categories;
 
 /**
@@ -18,5 +17,5 @@ public interface CategoriesDao {
 
 	Categories updateData(Categories category) throws Exception;
 
-	void deleteData(Categories category) throws Exception;
+    void deleteData(String id) throws Exception;
 }

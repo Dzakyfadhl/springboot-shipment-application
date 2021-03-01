@@ -1,7 +1,6 @@
 package com.lawencon.shipment.service;
 
 import java.util.List;
-
 import com.lawencon.shipment.model.EmployeeProfiles;
 import com.lawencon.shipment.model.Receivers;
 import com.lawencon.shipment.model.Shipments;
@@ -16,7 +15,7 @@ public interface ShipmentService {
 
 	List<Shipments> getAll() throws Exception;
 
-	List<Shipments> getByCashierId(Long id) throws Exception;
+    List<Shipments> getByCashierId(String id) throws Exception;
 
 	Shipments findByShippingCode(String code) throws Exception;
 

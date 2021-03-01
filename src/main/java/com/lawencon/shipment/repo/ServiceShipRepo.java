@@ -2,7 +2,6 @@ package com.lawencon.shipment.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import com.lawencon.shipment.model.ServiceShipments;
 
 /**
@@ -10,7 +9,7 @@ import com.lawencon.shipment.model.ServiceShipments;
  */
 
 @Repository
-public interface ServiceShipRepo extends JpaRepository<ServiceShipments, Long> {
+public interface ServiceShipRepo extends JpaRepository<ServiceShipments, String> {
 
 	ServiceShipments findByServiceCode(String serviceCode) throws Exception;
 

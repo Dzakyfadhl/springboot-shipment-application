@@ -2,50 +2,29 @@ package com.lawencon.shipment.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Dzaky Fadhilla Guci
  */
 @Entity
-@Table(name = "tb_m_roles")
-public class Roles {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "tb_m_roles",
+    uniqueConstraints = {@UniqueConstraint(name = "bk_role", columnNames = "code")})
+public class Roles extends BaseMaster {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+  private static final long serialVersionUID = 1L;
 
-	@Column(name = "roles_name", unique = true, nullable = false, length = 50)
-	private String roleName;
 
-	@Column(name = "role_code", unique = true, nullable = false, length = 50)
-	private String roleCode;
+  @Column(nullable = false, length = 50)
+  private String code;
 
-	public Long getId() {
-		return id;
-	}
+  @Column(nullable = false, length = 50)
+  private String name;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getRoleName() {
-		return roleName;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	public String getRoleCode() {
-		return roleCode;
-	}
-
-	public void setRoleCode(String roleCode) {
-		this.roleCode = roleCode;
-	}
 
 }

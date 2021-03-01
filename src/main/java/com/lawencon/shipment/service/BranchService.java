@@ -1,7 +1,6 @@
 package com.lawencon.shipment.service;
 
 import java.util.List;
-
 import com.lawencon.shipment.model.BranchRegions;
 
 /**
@@ -18,5 +17,5 @@ public interface BranchService {
 
 	BranchRegions updateData(BranchRegions branch) throws Exception;
 
-	void deleteData(BranchRegions branch) throws Exception;
+    void deleteData(String id) throws Exception;
 }

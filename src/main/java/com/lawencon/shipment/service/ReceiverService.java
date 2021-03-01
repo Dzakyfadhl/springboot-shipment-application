@@ -1,7 +1,6 @@
 package com.lawencon.shipment.service;
 
 import java.util.List;
-
 import com.lawencon.shipment.model.Receivers;
 import com.lawencon.shipment.model.Shipments;
 
@@ -13,7 +12,7 @@ public interface ReceiverService {
 
 	Receivers insertReceiver(Receivers receiver) throws Exception;
 
-	List<Receivers> getReceiverByCourier(Long id) throws Exception;
+    List<Receivers> getReceiverByCourier(String id) throws Exception;
 
 	void updateReceiveStatus(Receivers receiver) throws Exception;
 

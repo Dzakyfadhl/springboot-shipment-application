@@ -1,7 +1,6 @@
 package com.lawencon.shipment.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.lawencon.shipment.helper.Response;
@@ -33,7 +31,7 @@ public class ReceiversController {
 	@GetMapping("{CourierId}")
 	public Response<?> getByCourier(@PathVariable("CourierId") String CourierId) {
 		try {
-			List<Receivers> listResult = receiverService.getReceiverByCourier(Long.valueOf(CourierId));
+          List<Receivers> listResult = receiverService.getReceiverByCourier(CourierId);
 
 			return new Response<>(HttpStatus.OK, listResult);
 		} catch (Exception e) {
@@ -56,7 +54,7 @@ public class ReceiversController {
 	}
 
 	@GetMapping("/shipcode/{shipCode}")
-	public Response<?> getByShipCode(@PathVariable("shipCode") Long id) {
+    public Response<?> getByShipCode(@PathVariable("shipCode") String id) {
 		try {
 			Shipments ship = new Shipments();
 			ship.setId(id);

@@ -1,13 +1,10 @@
 package com.lawencon.shipment.service.hibernate;
 
 import java.util.List;
-
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import com.lawencon.shipment.dao.CategoriesDao;
 import com.lawencon.shipment.model.Categories;
 import com.lawencon.shipment.service.CategoryService;
@@ -49,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public void deleteData(Categories category) throws Exception {
-		categoriesDao.deleteData(category);
+    public void deleteData(String id) throws Exception {
+      categoriesDao.deleteData(id);
 	}
 }

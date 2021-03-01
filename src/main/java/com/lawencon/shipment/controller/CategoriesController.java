@@ -1,7 +1,6 @@
 package com.lawencon.shipment.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,9 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.shipment.helper.Response;
 import com.lawencon.shipment.model.Categories;
@@ -22,13 +19,12 @@ import com.lawencon.shipment.service.CategoryService;
  */
 
 @RestController
-@RequestMapping("/categories")
 public class CategoriesController {
 
 	@Autowired
 	private CategoryService categoryService;
 
-	@GetMapping
+    @GetMapping(value = "/categories")
 	public Response<?> getCategories() {
 		try {
 			List<Categories> listCategory = categoryService.getListCategories();
@@ -39,7 +35,7 @@ public class CategoriesController {
 		}
 	}
 
-	@PostMapping
+    @PostMapping(value = "/category")
 	public Response<?> insert(@RequestBody String body) {
 		try {
 			Categories category = new ObjectMapper().readValue(body, Categories.class);
@@ -51,7 +47,7 @@ public class CategoriesController {
 		}
 	}
 
-	@PutMapping
+    @PutMapping(value = "/category")
 	public Response<?> updateAll(@RequestBody String body) {
 		try {
 			Categories category = new ObjectMapper().readValue(body, Categories.class);
@@ -63,11 +59,10 @@ public class CategoriesController {
 		}
 	}
 
-	@DeleteMapping
-	public Response<?> deleteAll(@RequestBody String body) {
+    @DeleteMapping(value = "/category/{id}")
+    public Response<?> deleteAll(@RequestBody String id) {
 		try {
-			Categories category = new ObjectMapper().readValue(body, Categories.class);
-			categoryService.deleteData(category);
+          categoryService.deleteData(id);
 			return new Response<>(HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

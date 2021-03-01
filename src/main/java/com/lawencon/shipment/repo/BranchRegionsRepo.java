@@ -2,7 +2,6 @@ package com.lawencon.shipment.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import com.lawencon.shipment.model.BranchRegions;
 
 /**
@@ -10,7 +9,7 @@ import com.lawencon.shipment.model.BranchRegions;
  */
 
 @Repository
-public interface BranchRegionsRepo extends JpaRepository<BranchRegions, Long> {
+public interface BranchRegionsRepo extends JpaRepository<BranchRegions, String> {
 
 	BranchRegions findByBranchCode(String branchCode) throws Exception;
 }

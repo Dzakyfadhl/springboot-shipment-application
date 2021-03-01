@@ -1,9 +1,7 @@
 package com.lawencon.shipment.dao.hibernate;
 
 import java.util.List;
-
 import org.springframework.stereotype.Repository;
-
 import com.lawencon.shipment.dao.BaseDao;
 import com.lawencon.shipment.dao.BranchDao;
 import com.lawencon.shipment.model.BranchRegions;
@@ -45,7 +43,7 @@ public class BranchDaoHibernateImpl extends BaseDao implements BranchDao {
 	}
 
 	@Override
-	public void deleteData(BranchRegions branch) throws Exception {
+    public void deleteData(String id) throws Exception {
 		// TODO Auto-generated method stub
 
 	}

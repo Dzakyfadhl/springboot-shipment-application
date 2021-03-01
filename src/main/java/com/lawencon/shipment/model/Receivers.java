@@ -2,139 +2,62 @@ package com.lawencon.shipment.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
+import javax.persistence.UniqueConstraint;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Dzaky Fadhilla Guci
  */
 
 @Entity
-@Table(name = "tb_r_dtl_receiver")
-public class Receivers {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "tb_r_dtl_receiver",
+    uniqueConstraints = {@UniqueConstraint(name = "bk_receiver", columnNames = "code")})
+public class Receivers extends BaseTransaction {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+  private static final long serialVersionUID = 1L;
 
-	@Column(name = "receiver_code", nullable = false, length = 50, unique = true)
-	private String receiverCode;
+  @Column(nullable = false, length = 50, unique = true)
+  private String code;
 
-	@Column(name = "receiver_name", nullable = false, length = 50)
-	private String receiverName;
+  @Column(nullable = false, length = 50)
+  private String name;
 
-	@Column(name = "receiver_phone", nullable = false, length = 15)
-	private String receiverPhone;
+  @Column(nullable = false, length = 15)
+  private String phone;
 
-	@Column(name = "receiver_address", nullable = false, length = 100)
-	private String receiverAddress;
+  @Column(nullable = false, length = 100)
+  private String address;
 
-	@Column(name = "receive_status", nullable = false, length = 30)
-	private String receiveStatus;
+  @Column(nullable = false, length = 30)
+  private String status;
 
-	@ManyToOne
-	@JoinColumn(name = "shipping_id", nullable = false)
-	private Shipments shipmentId;
+  @ManyToOne
+  @JoinColumn(name = "shipment_id", nullable = false,
+      foreignKey = @ForeignKey(name = "fk_shipment"))
+  private Shipments shipments;
 
-	@ManyToOne
-	@JoinColumn(name = "senders_id", nullable = false)
-	private Senders senderId;
+  @ManyToOne
+  @JoinColumn(name = "sender_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sender"))
+  private Senders senders;
 
-	@Column(name = "arrival_time")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime arrivalTime;
+  @Column(name = "arrival_time")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  private LocalDateTime arrivalTime;
 
-	@Transient
-	private List<ItemDetails> listItemsReceiver;
+  @Transient
+  private List<ItemDetails> listItemsReceiver;
 
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getReceiverCode() {
-		return receiverCode;
-	}
-
-	public void setReceiverCode(String receiverCode) {
-		this.receiverCode = receiverCode;
-	}
-
-	public String getReceiverName() {
-		return receiverName;
-	}
-
-	public void setReceiverName(String receiverName) {
-		this.receiverName = receiverName;
-	}
-
-	public String getReceiverPhone() {
-		return receiverPhone;
-	}
-
-	public void setReceiverPhone(String receiverPhone) {
-		this.receiverPhone = receiverPhone;
-	}
-
-	public String getReceiverAddress() {
-		return receiverAddress;
-	}
-
-	public void setReceiverAddress(String receiverAddress) {
-		this.receiverAddress = receiverAddress;
-	}
-
-	public Shipments getShipmentId() {
-		return shipmentId;
-	}
-
-	public void setShipmentId(Shipments shipmentId) {
-		this.shipmentId = shipmentId;
-	}
-
-	public Senders getSenderId() {
-		return senderId;
-	}
-
-	public void setSenderId(Senders senderId) {
-		this.senderId = senderId;
-	}
-
-	public List<ItemDetails> getListItemsReceiver() {
-		return listItemsReceiver;
-	}
-
-	public void setListItemsReceiver(List<ItemDetails> listItemsReceiver) {
-		this.listItemsReceiver = listItemsReceiver;
-	}
-
-	public String getReceiveStatus() {
-		return receiveStatus;
-	}
-
-	public void setReceiveStatus(String receiveStatus) {
-		this.receiveStatus = receiveStatus;
-	}
-
-	public LocalDateTime getArrivalTime() {
-		return arrivalTime;
-	}
-
-	public void setArrivalTime(LocalDateTime arrivalTime) {
-		this.arrivalTime = arrivalTime;
-	}
 
 }

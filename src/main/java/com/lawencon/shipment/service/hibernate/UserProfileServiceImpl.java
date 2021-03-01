@@ -1,10 +1,8 @@
 package com.lawencon.shipment.service.hibernate;
 
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.lawencon.shipment.model.EmployeeProfiles;
 import com.lawencon.shipment.model.Users;
 import com.lawencon.shipment.service.ProfileService;
@@ -29,9 +27,9 @@ public class UserProfileServiceImpl implements UserProfileService {
 	public void insertUserProfile(Users users, EmployeeProfiles employeeProfiles) throws Exception {
 		userService.insertUser(users);
 
-		Long id = userService.getIdByUserCode(users.getUserCode());
+        String id = userService.getIdByUserCode(users.getUserCode());
 		users.setId(id);
-		employeeProfiles.setUsersId(users);
+        employeeProfiles.setUsers(users);
 		profileService.insertProfile(employeeProfiles);
 	}
 

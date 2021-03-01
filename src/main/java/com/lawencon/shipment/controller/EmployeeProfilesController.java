@@ -1,7 +1,6 @@
 package com.lawencon.shipment.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.shipment.helper.Response;
 import com.lawencon.shipment.model.EmployeeProfiles;
@@ -41,7 +39,7 @@ public class EmployeeProfilesController {
 	}
 
 	@GetMapping("/cashier/{id}")
-	public Response<?> getCashier(@PathVariable("id") Long id) {
+    public Response<?> getCashier(@PathVariable("id") String id) {
 		try {
 			Users user = new Users();
 			user.setId(id);

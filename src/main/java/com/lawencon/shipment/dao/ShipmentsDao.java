@@ -1,7 +1,6 @@
 package com.lawencon.shipment.dao;
 
 import java.util.List;
-
 import com.lawencon.shipment.model.EmployeeProfiles;
 import com.lawencon.shipment.model.Shipments;
 
@@ -19,7 +18,7 @@ public interface ShipmentsDao {
 
 	Shipments updateData(Shipments ship) throws Exception;
 
-	List<Shipments> getByCashierId(Long id) throws Exception;
+    List<Shipments> getByCashierId(String id) throws Exception;
 
 	Shipments findByShippingCode(String code) throws Exception;
 
