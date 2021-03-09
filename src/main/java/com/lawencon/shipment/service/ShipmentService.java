@@ -1,8 +1,8 @@
 package com.lawencon.shipment.service;
 
 import java.util.List;
+import com.lawencon.shipment.dto.ShipmentRequestDTO;
 import com.lawencon.shipment.model.EmployeeProfiles;
-import com.lawencon.shipment.model.Receivers;
 import com.lawencon.shipment.model.Shipments;
 
 /**
@@ -11,7 +11,7 @@ import com.lawencon.shipment.model.Shipments;
 
 public interface ShipmentService {
 
-	Shipments insertShipment(Shipments ship, List<Receivers> listReceivers) throws Exception;
+  Shipments insertShipment(ShipmentRequestDTO request) throws Exception;
 
 	List<Shipments> getAll() throws Exception;
 

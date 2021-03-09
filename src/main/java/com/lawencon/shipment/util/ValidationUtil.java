@@ -12,6 +12,7 @@ import com.lawencon.shipment.error.IllegalRequestException;
 /**
  * @author Dzaky Fadhilla Guci
  */
+
 @Component
 public class ValidationUtil {
 

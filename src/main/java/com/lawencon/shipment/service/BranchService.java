@@ -17,5 +17,7 @@ public interface BranchService {
 
 	BranchRegions updateData(BranchRegions branch) throws Exception;
 
+    BranchRegions findById(String id) throws Exception;
+
     void deleteData(String id) throws Exception;
 }

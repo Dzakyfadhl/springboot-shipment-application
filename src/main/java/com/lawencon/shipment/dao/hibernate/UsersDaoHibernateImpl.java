@@ -63,14 +63,10 @@ public class UsersDaoHibernateImpl extends BaseDao implements UsersDao {
   }
 
   @Override
-  public Users updateData(Users user) throws Exception {
-    return null;
-  }
-
-  @Override
   public Users findByUsername(String username) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
+    String query = "FROM Users WHERE username = ?";
+    List<Users> users = em.createQuery(query, Users.class).getResultList();
+    return getResultModel(users);
   }
 
   @Override
@@ -83,5 +79,15 @@ public class UsersDaoHibernateImpl extends BaseDao implements UsersDao {
   public String getIdByUserCode(String userCode) throws Exception {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public void updateUser(Users user) throws Exception {
+    em.persist(user);
+  }
+
+  @Override
+  public Users findById(String id) throws Exception {
+    return em.find(Users.class, id);
   }
 }

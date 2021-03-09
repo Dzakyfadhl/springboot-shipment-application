@@ -3,95 +3,59 @@ package com.lawencon.shipment.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lawencon.shipment.helper.Response;
+import com.lawencon.shipment.helper.WebResponse;
 import com.lawencon.shipment.model.Receivers;
-import com.lawencon.shipment.model.Shipments;
 import com.lawencon.shipment.service.ReceiverService;
+import com.lawencon.shipment.util.WebResponseUtils;
 
 /**
  * @author Dzaky Fadhilla Guci
  */
 
 @RestController
-@RequestMapping("/receiver")
 public class ReceiversController {
 
-	@Autowired
-	private ReceiverService receiverService;
+  @Autowired
+  private ReceiverService receiverService;
 
-	@GetMapping("{CourierId}")
-	public Response<?> getByCourier(@PathVariable("CourierId") String CourierId) {
-		try {
-          List<Receivers> listResult = receiverService.getReceiverByCourier(CourierId);
+  @GetMapping(value = "/receivers/{CourierId}")
+  public ResponseEntity<WebResponse<List<Receivers>>> getByCourier(
+      @PathVariable("CourierId") String CourierId) throws Exception {
+    return WebResponseUtils.createWebResponse(receiverService.getReceiverByCourier(CourierId),
+        HttpStatus.OK);
+  }
 
-			return new Response<>(HttpStatus.OK, listResult);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response<>(HttpStatus.OK, null);
-		}
+  @GetMapping(value = "/receivers/courier-code/{code}")
+  public ResponseEntity<WebResponse<List<Receivers>>> getByCourierCode(
+      @PathVariable("code") String code) throws Exception {
+    return WebResponseUtils.createWebResponse(receiverService.getByCourier(code), HttpStatus.OK);
+  }
 
-	}
+  @GetMapping(value = "/receivers/ship-code/{id}")
+  public ResponseEntity<WebResponse<List<Receivers>>> getByShipCode(
+      @PathVariable("id") String id) throws Exception {
+    return WebResponseUtils.createWebResponse(receiverService.findByShipmentId(id), HttpStatus.OK);
+  }
 
-	@GetMapping("/courcode/{code}")
-	public Response<?> getByCourierCode(@PathVariable("code") String code) {
-		try {
-			List<Receivers> listResult = receiverService.getByCourier(code);
-			return new Response<>(HttpStatus.OK, listResult);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response<>(HttpStatus.OK, null);
-		}
+  @PatchMapping(value = "/receiver")
+  public ResponseEntity<WebResponse<String>> updateStatus(@RequestBody Receivers body)
+      throws Exception {
+    receiverService.updateReceiveStatus(body);
+    return WebResponseUtils.createWebResponse("Update status success", HttpStatus.OK);
+  }
 
-	}
-
-	@GetMapping("/shipcode/{shipCode}")
-    public Response<?> getByShipCode(@PathVariable("shipCode") String id) {
-		try {
-			Shipments ship = new Shipments();
-			ship.setId(id);
-			List<Receivers> listResult = receiverService.findByShipmentId(ship);
-
-			return new Response<>(HttpStatus.OK, listResult);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response<>(HttpStatus.OK, null);
-		}
-
-	}
-
-	@PatchMapping
-	public Response<?> updateStatus(@RequestBody String body) {
-		try {
-			ObjectMapper obj = new ObjectMapper();
-			obj.registerModule(new JavaTimeModule());
-			Receivers receivers = obj.readValue(body, Receivers.class);
-			receiverService.updateReceiveStatus(receivers);
-			return new Response<>(HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response<>(HttpStatus.NOT_FOUND);
-		}
-	}
-
-	@PutMapping
-	public Response<?> updateAll(@RequestBody String body) {
-		try {
-			Receivers receivers = new ObjectMapper().readValue(body, Receivers.class);
-			receivers = receiverService.updateData(receivers);
-			return new Response<>(HttpStatus.OK, receivers);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response<>(HttpStatus.NOT_FOUND, null);
-		}
-	}
+  @PutMapping(value = "/receiver")
+  public ResponseEntity<WebResponse<String>> updateData(@RequestBody Receivers body)
+      throws Exception {
+    receiverService.updateData(body);
+    return WebResponseUtils.createWebResponse("Update data receiver success", HttpStatus.OK);
+  }
 
 }

@@ -25,7 +25,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Override
 	public void insertUserProfile(Users users, EmployeeProfiles employeeProfiles) throws Exception {
-		userService.insertUser(users);
+      // userService.insertUser(users);
 
         String id = userService.getIdByUserCode(users.getUserCode());
 		users.setId(id);

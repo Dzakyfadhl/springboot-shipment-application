@@ -19,10 +19,12 @@ public interface UsersDao {
 
 	void insertUser(Users user) throws Exception;
 
-	Users updateData(Users user) throws Exception;
-
 	Users findByUsername(String username) throws Exception;
 
 	Long countData() throws Exception;
+
+    void updateUser(Users user) throws Exception;
+
+    Users findById(String id) throws Exception;
 
 }

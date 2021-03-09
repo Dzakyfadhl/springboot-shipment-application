@@ -10,6 +10,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
@@ -32,12 +33,14 @@ public abstract class BaseEntity implements Serializable {
 
   @Column(name = "created_at")
   @CreationTimestamp
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime createdAt;
 
   @Column(name = "updated_by")
   private String updatedBy;
 
   @Column(name = "updated_at")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime updatedAt;
 
   @PreUpdate

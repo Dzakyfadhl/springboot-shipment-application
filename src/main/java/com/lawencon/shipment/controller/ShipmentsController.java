@@ -3,95 +3,53 @@ package com.lawencon.shipment.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lawencon.shipment.helper.Helper;
-import com.lawencon.shipment.helper.Response;
+import com.lawencon.shipment.dto.ShipmentRequestDTO;
+import com.lawencon.shipment.helper.WebResponse;
 import com.lawencon.shipment.model.EmployeeProfiles;
 import com.lawencon.shipment.model.Shipments;
 import com.lawencon.shipment.service.ShipmentService;
+import com.lawencon.shipment.util.WebResponseUtils;
 
 /**
  * @author Dzaky Fadhilla Guci
  */
 
 @RestController
-@RequestMapping("/shipment")
 public class ShipmentsController {
 
-	private ShipmentService shipmentService;
+  @Autowired
+  private ShipmentService shipmentService;
 
-	@Autowired
-	public ShipmentsController(ShipmentService shipmentService) {
-		this.shipmentService = shipmentService;
-	}
+  @GetMapping(value = "/shipments")
+  public ResponseEntity<WebResponse<List<Shipments>>> getAll() throws Exception {
+    return WebResponseUtils.createWebResponse(shipmentService.getAll(), HttpStatus.OK);
+  }
 
-	@GetMapping
-	public Response<?> getAll() {
-		List<Shipments> listResult;
-		try {
-			listResult = shipmentService.getAll();
-			return new Response<>(HttpStatus.OK, listResult);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response<Shipments>(HttpStatus.NOT_FOUND, "data null");
-		}
-	}
+  @GetMapping(value = "/shipments/courier/{id}")
+  public ResponseEntity<WebResponse<List<Shipments>>> findByCourierId(@PathVariable("id") String id)
+      throws Exception {
+    EmployeeProfiles ep = new EmployeeProfiles();
+    ep.setId(id);
+    return WebResponseUtils.createWebResponse(shipmentService.findByCourierId(ep), HttpStatus.OK);
+  }
 
-	@GetMapping("/courid/{id}")
-    public Response<?> findByCourierId(@PathVariable("id") String id) {
-		EmployeeProfiles ep = new EmployeeProfiles();
-		ep.setId(id);
-		List<Shipments> listResult;
-		try {
-			listResult = shipmentService.findByCourierId(ep);
-			return new Response<>(HttpStatus.OK, listResult);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response<Shipments>(HttpStatus.NOT_FOUND, "data null");
-		}
-	}
+  @GetMapping(value = "/shipments/cashier/{cashierId}")
+  public ResponseEntity<WebResponse<List<Shipments>>> getByCourier(
+      @PathVariable("cashierId") String cashierId) throws Exception {
+    return WebResponseUtils.createWebResponse(shipmentService.getByCashierId(cashierId),
+        HttpStatus.OK);
+  }
 
-	@GetMapping("/{cashierId}")
-	public Response<?> getByCourier(@PathVariable("cashierId") String cashierId) {
-		List<Shipments> listResult;
-		try {
-          listResult = shipmentService.getByCashierId(cashierId);
-			return new Response<>(HttpStatus.OK, listResult);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response<Shipments>(HttpStatus.NOT_FOUND, "data null");
-		}
-	}
-
-	@PostMapping
-	public Response<?> insert(@RequestBody String body) {
-		try {
-			ObjectMapper obj = new ObjectMapper();
-			obj.registerModule(new JavaTimeModule());
-			Helper helper = obj.readValue(body, Helper.class);
-			Shipments shipments = shipmentService.insertShipment(helper.shipments, helper.listReceivers);
-			return new Response<Shipments>(HttpStatus.OK, shipments);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-			return new Response<>(HttpStatus.BAD_REQUEST, e.getMessage());
-		} catch (Exception e) {
-			e.printStackTrace();
-			if (e.getMessage().contains("Foreign key")) {
-				return new Response<>(HttpStatus.BAD_REQUEST, e.getMessage());
-			} else if (e.getMessage().contains("Invalid input")) {
-				return new Response<>(HttpStatus.BAD_REQUEST, e.getMessage());
-			} else {
-				return new Response<>(HttpStatus.BAD_REQUEST, "insert data failed");
-			}
-		}
-	}
+  @PostMapping(value = "/shipment")
+  public ResponseEntity<?> insert(@RequestBody ShipmentRequestDTO request) throws Exception {
+    shipmentService.insertShipment(request);
+    return WebResponseUtils.createWebResponse("Shipment created", HttpStatus.CREATED);
+  }
 
 }

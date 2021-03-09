@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.lawencon.shipment.dao.BaseDao;
 import com.lawencon.shipment.dao.BranchDao;
+import com.lawencon.shipment.error.IllegalRequestException;
 import com.lawencon.shipment.model.BranchRegions;
 import com.lawencon.shipment.repo.BranchRegionsRepo;
 
@@ -43,5 +44,12 @@ public class BranchDaoJpaImpl extends BaseDao implements BranchDao {
     public void deleteData(String id) throws Exception {
       branchRegionsRepo.deleteById(id);
 	}
+
+    @Override
+    public BranchRegions findById(String id) throws Exception {
+      return branchRegionsRepo.findById(id)
+          .orElseThrow(() -> new IllegalRequestException("id", id));
+
+    }
 
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.lawencon.shipment.dao.BaseDao;
 import com.lawencon.shipment.dao.CategoriesDao;
+import com.lawencon.shipment.error.IllegalRequestException;
 import com.lawencon.shipment.model.Categories;
 import com.lawencon.shipment.repo.CategoriesRepo;
 
@@ -43,4 +44,9 @@ public class CategoriesDaoJpaImpl extends BaseDao implements CategoriesDao {
     public void deleteData(String id) throws Exception {
       categoriesRepo.deleteById(id);
 	}
+
+    @Override
+    public Categories findById(String id) throws Exception {
+      return categoriesRepo.findById(id).orElseThrow(() -> new IllegalRequestException("id", id));
+    }
 }

@@ -18,4 +18,8 @@ public interface CategoryService {
 	Categories updateData(Categories category) throws Exception;
 
     void deleteData(String id) throws Exception;
+
+    Categories findById(String id) throws Exception;
+
+
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.lawencon.shipment.dao.BaseDao;
 import com.lawencon.shipment.dao.UsersDao;
+import com.lawencon.shipment.error.DataIsNotExistException;
 import com.lawencon.shipment.model.Roles;
 import com.lawencon.shipment.model.Users;
 import com.lawencon.shipment.repo.UsersRepo;
@@ -59,14 +60,6 @@ public class UsersDaoJpaImpl extends BaseDao implements UsersDao {
   }
 
   @Override
-  public Users updateData(Users user) throws Exception {
-    Users userDb = usersRepo.findById(user.getId()).get();
-    user.setUsername(userDb.getUsername());
-    return usersRepo.save(user);
-
-  }
-
-  @Override
   public Users findByUsername(String username) throws Exception {
     return usersRepo.findByUsername(username);
   }
@@ -79,5 +72,15 @@ public class UsersDaoJpaImpl extends BaseDao implements UsersDao {
   @Override
   public String getIdByUserCode(String userCode) throws Exception {
     return usersRepo.getIdByUserCode(userCode);
+  }
+
+  @Override
+  public void updateUser(Users user) throws Exception {
+    usersRepo.save(user);
+  }
+
+  @Override
+  public Users findById(String id) throws Exception {
+    return usersRepo.findById(id).orElseThrow(() -> new DataIsNotExistException());
   }
 }

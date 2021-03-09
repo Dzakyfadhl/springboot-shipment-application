@@ -19,4 +19,6 @@ public interface BranchDao {
 
     void deleteData(String id) throws Exception;
 
+    BranchRegions findById(String id) throws Exception;
+
 }

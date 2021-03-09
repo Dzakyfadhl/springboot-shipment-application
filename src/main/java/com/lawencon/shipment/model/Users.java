@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "tb_m_users",
     uniqueConstraints = {@UniqueConstraint(name = "bk_code", columnNames = "user_code"),
         @UniqueConstraint(name = "bk_username", columnNames = "username")})
-@JsonIgnoreProperties(allowSetters = true, value = {"hibernateLazyInitializer", "passwords"})
+@JsonIgnoreProperties(allowSetters = true, value = {"hibernateLazyInitializer", "password"})
 public class Users extends BaseMaster {
 
   private static final long serialVersionUID = 1L;
@@ -37,6 +37,9 @@ public class Users extends BaseMaster {
   @ManyToOne // (fetch = FetchType.LAZY)
   @JoinColumn(name = "role_id", nullable = false, foreignKey = @ForeignKey(name = "fk_role"))
   private Roles roles;
+
+  @Column(name = "test_json", columnDefinition = "json")
+  private String testJson;
 
 
 }

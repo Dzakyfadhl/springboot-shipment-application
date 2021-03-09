@@ -2,26 +2,24 @@ package com.lawencon.shipment.service.hibernate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import com.lawencon.shipment.dao.ShipmentsDao;
+import com.lawencon.shipment.dto.ShipmentRequestDTO;
 import com.lawencon.shipment.model.BranchRegions;
 import com.lawencon.shipment.model.EmployeeProfiles;
 import com.lawencon.shipment.model.ItemDetails;
 import com.lawencon.shipment.model.Receivers;
 import com.lawencon.shipment.model.ServiceShipments;
 import com.lawencon.shipment.model.Shipments;
-import com.lawencon.shipment.model.UserSession;
-import com.lawencon.shipment.service.BranchService;
 import com.lawencon.shipment.service.ItemsService;
-import com.lawencon.shipment.service.ProfileService;
 import com.lawencon.shipment.service.ReceiverService;
-import com.lawencon.shipment.service.ServeShipService;
 import com.lawencon.shipment.service.ShipmentService;
+import com.lawencon.shipment.util.TransactionNumberUtil;
+import com.lawencon.shipment.util.ValidationUtil;
 
 /**
  * @author Dzaky Fadhilla Guci
@@ -30,62 +28,49 @@ import com.lawencon.shipment.service.ShipmentService;
 @Transactional
 public class ShipmentServiceImpl implements ShipmentService {
 
+  @Autowired
+  @Qualifier(value = "jpa_shipments")
   private ShipmentsDao shipmentDao;
 
-  private UserSession userSession;
-
+  @Autowired
   private ItemsService itemService;
-  private ReceiverService receiverService;
-  private BranchService branchService;
-  private ServeShipService serveShipService;
-  private ProfileService profileService;
 
   @Autowired
-  public ShipmentServiceImpl(@Qualifier(value = "jpa_shipments") ShipmentsDao shipmentDao,
-      ItemsService itemService, UserSession userSession, ReceiverService receiverService,
-      BranchService branchService, ServeShipService serveShipService,
-      ProfileService profileService) {
-    this.shipmentDao = shipmentDao;
-    this.itemService = itemService;
-    this.userSession = userSession;
-    this.receiverService = receiverService;
-    this.branchService = branchService;
-    this.serveShipService = serveShipService;
-    this.profileService = profileService;
-  }
+  private ReceiverService receiverService;
+
+  @Autowired
+  private ValidationUtil validationUtil;
+
 
   @Override
-  public Shipments insertShipment(Shipments ship, List<Receivers> listReceivers) throws Exception {
+  public Shipments insertShipment(ShipmentRequestDTO request) throws Exception {
+    validationUtil.validate(request);
 
-    validateInput(ship);
+    BranchRegions branch = new BranchRegions();
+    branch.setId(request.getBracnhId());
+    ServiceShipments service = new ServiceShipments();
+    service.setId(request.getServiceId());
+    EmployeeProfiles cashier = new EmployeeProfiles();
+    cashier.setId(request.getCashierId());
+    EmployeeProfiles courier = new EmployeeProfiles();
+    courier.setId(request.getCourierId());
 
-    BranchRegions br = branchService.getBranchByCode(ship.getBranch().getBranchCode());
-    ServiceShipments ss = serveShipService.getServiceByCode(ship.getService().getServiceCode());
-    EmployeeProfiles courier = profileService.getProfileByCode(ship.getCourier().getEmployeeCode());
-    EmployeeProfiles cashier = profileService.getProfileByCode(ship.getCashier().getEmployeeCode());
+    // validateFK(br, ss, courier, cashier);
 
-    validateFK(br, ss, courier, cashier);
+    Shipments shipments = new Shipments();
 
-    ship.setBranch(br);
-    ship.setService(ss);
-    ship.setCashier(cashier);
-    ship.setCourier(courier);
-
-    StringBuilder code = new StringBuilder("SHIP");
-
-    LocalDateTime currentDateTime = LocalDateTime.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy-HHmmss");
-    String formattedDateTime = currentDateTime.format(formatter);
-    ship.setTrxTime(currentDateTime);
-    code.append(formattedDateTime);
-    ship.setTrxNumber(code.toString());
-    // ship.setCashierId(userSession.getActiveProfile());
+    shipments.setBranch(branch);
+    shipments.setService(service);
+    shipments.setCashier(cashier);
+    shipments.setCourier(courier);
+    shipments.setTrxTime(LocalDateTime.now());
+    shipments.setTrxNumber(TransactionNumberUtil.generateShipNumber());
 
     double tempPrice = 0;
 
-    Shipments shipId = shipmentDao.insertShipment(ship);
-    for (Receivers r : listReceivers) {
-      r.setShipments(shipId);
+    shipmentDao.insertShipment(shipments);
+    for (Receivers r : request.getListReceivers()) {
+      r.setShipments(shipments);
       Receivers receiverId = receiverService.insertReceiver(r);
       for (ItemDetails i : r.getListItemsReceiver()) {
         i.setReceivers(receiverId);
@@ -95,9 +80,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     }
 
-    shipId.setTotalPrice(new BigDecimal(tempPrice));
+    shipments.setTotalPrice(new BigDecimal(tempPrice));
 
-    return shipmentDao.updateTotalPrice(shipId);
+    return shipmentDao.updateTotalPrice(shipments);
 
   }
 
@@ -161,12 +146,7 @@ public class ShipmentServiceImpl implements ShipmentService {
   @Override
   public List<Shipments> getByCashierId(String id) throws Exception {
     List<Shipments> listShipments = shipmentDao.getByCashierId(id);
-    if (listShipments.isEmpty()) {
-      return null;
-    } else {
-      return shipmentDao.getByCashierId(id);
-    }
-
+    return listShipments;
   }
 
   @Override

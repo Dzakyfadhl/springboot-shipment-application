@@ -99,8 +99,10 @@ public class ReceiverServiceImpl implements ReceiverService {
 
 	@Override
 	@Transactional
-	public List<Receivers> findByShipmentId(Shipments ship) throws Exception {
-		return receiverDao.findByShipmentId(ship);
+    public List<Receivers> findByShipmentId(String id) throws Exception {
+      Shipments shipments = new Shipments();
+      shipments.setId(id);
+      return receiverDao.findByShipmentId(shipments);
 	}
 
 	@Override

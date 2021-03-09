@@ -57,12 +57,7 @@ public class ReceiverDaoJpaImpl extends BaseDao implements ReceiverDao {
 
   @Override
   public void updateReceiveStatus(Receivers receiver) throws Exception {
-
-    em.createQuery(
-        "UPDATE Receivers SET receiveStatus = 'Delivered' , arrivalTime = ?1 WHERE receiver_code = ?2")
-        .setParameter(1, receiver.getArrivalTime()).setParameter(2, receiver.getCode())
-        .executeUpdate();
-
+    receiversRepo.updateStatus(receiver.getArrivalTime(), receiver.getCode());
   }
 
   @Override

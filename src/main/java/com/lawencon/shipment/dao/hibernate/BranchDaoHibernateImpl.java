@@ -16,7 +16,6 @@ public class BranchDaoHibernateImpl extends BaseDao implements BranchDao {
 	public List<BranchRegions> getListBranch() throws Exception {
 		List<BranchRegions> listResult = em.createQuery("from BranchRegions", BranchRegions.class).getResultList();
 		return listResult;
-
 	}
 
 	@Override
@@ -27,25 +26,28 @@ public class BranchDaoHibernateImpl extends BaseDao implements BranchDao {
 
 	@Override
 	public BranchRegions getBranchByCode(String branchCode) throws Exception {
-
 		List<BranchRegions> listResult = em
 				.createQuery("from BranchRegions where branch_code = ?1 ", BranchRegions.class)
 				.setParameter(1, branchCode).getResultList();
-
 		return getResultModel(listResult);
-
 	}
 
 	@Override
 	public BranchRegions updateData(BranchRegions branch) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+      em.persist(branch);
+      return branch;
 	}
 
 	@Override
     public void deleteData(String id) throws Exception {
-		// TODO Auto-generated method stub
-
+      em.createQuery("DELETE FROM BranchRegions WHERE id = :id", BranchRegions.class)
+          .setParameter("id",
+          id).executeUpdate();
 	}
+
+    @Override
+    public BranchRegions findById(String id) throws Exception {
+      return em.find(BranchRegions.class, id);
+    }
 
 }
